@@ -35,22 +35,29 @@ target_LAB = target_LAB[0, 0, :]
 
 print(target_LAB.shape)
 
-color_similarity_radius = 10
+color_similarity_radius = 12
 
 mask = ((img_LAB[..., 1] - target_LAB[1]) ** 2 +
        (img_LAB[..., 2] - target_LAB[2]) ** 2) <= (color_similarity_radius ** 2)
 
-mask = sk.morphology.closing(mask, sk.morphology.disk(3))
+mask = sk.morphology.closing(mask, sk.morphology.disk(4))
 mask = sk.morphology.opening(mask, sk.morphology.disk(2))
 
-plt.subplot(1, 2, 1)
-plt.imshow(img_flattened)
+# plt.subplot(1, 2, 1)
+# plt.imshow(img_flattened)
 
-plt.subplot(1, 2, 2)
-plt.imshow(mask)
-plt.show()
+# plt.subplot(1, 2, 2)
+# plt.imshow(mask)
+# plt.show()
 
 # ov = sk.segmentation.mark_boundaries(img_ds, mask, mode="thick")
 # plt.imshow(ov)
 # plt.show()
 
+# MAYBE watershed
+labels = sk.measure.label(mask)
+props = sk.measure.regionprops_table(labels, properties=("centroid",))
+
+plt.imshow(sk.exposure.rescale_intensity(img, out_range=(0.0, 1.0)))
+plt.scatter(props["centroid-1"], props["centroid-0"], 1)
+plt.show()
