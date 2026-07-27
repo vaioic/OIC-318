@@ -9,7 +9,6 @@ from shared import core
 img = skimage.io.imread(
     "../data/untiled_images/UHRF1BRAF_NK-01_stitched/UHRF1BRAF_NK-01_stitched_m001_ORG.tif"
 )
-img = skimage.util.img_as_float32(img)
 
 img_adj = core.preprocess_image(img)
 
@@ -21,17 +20,17 @@ import matplotlib.pyplot as plt
 model = models.CellposeModel(gpu=True)
 masks, _, _ = model.eval(img_adj, flow_threshold=0.4, cellprob_threshold=0.0)
 
-target_color = (198, 229, 250)
+target_color = (53, 109, 124)
 
-plt.imshow(img)
+plt.imshow(skimage.util.img_as_ubyte(img))
 plt.show()
 
-blue_cell_mask = segment.match_color(img, target_color)
+blue_cell_mask = segment.match_color(skimage.util.img_as_ubyte(img), target_color)
 
 plt.imshow(blue_cell_mask)
 plt.show()
 
-ov = skimage.segmentation.mark_boundaries(img_adj, masks)
+ov = skimage.segmentation.mark_boundaries(img, masks)
 
 ov = skimage.segmentation.mark_boundaries(ov, blue_cell_mask, color=(1, 0, 1))
 
