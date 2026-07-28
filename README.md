@@ -26,7 +26,7 @@ This step uses ZEN lite (version 3.13).
    - Compression: **LZW**
    - Resize: **100%**
    - Check **Original Data**
-   - Uncheck **Shift Pixel** (Leaves original bit depth alone)
+   - Check **Shift Pixel** (Upsamples the original bit depth to 16-bit)
    - Uncheck **Apply Display Curve and Channel Color**
    - Check **Short Format**
    - Uncheck **Use Channel Names**
@@ -34,6 +34,9 @@ This step uses ZEN lite (version 3.13).
    - Select Region: **Full**
    - Select **Export Selected Tiles**
    - Select the export destination as required.
+   
+   Note: The original image is upsampled to 16-bit, but this is ok since we are not
+   measuring image intensities.
 
 4. Select **Apply**
 
