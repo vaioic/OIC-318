@@ -34,7 +34,7 @@ def process_directory(input_dir, output_dir, img_chunk_size=50):
     # Process the images in chunks
     summary_data = []
 
-    for i in range(0, len(file_list[:3]), img_chunk_size):
+    for i in range(0, len(file_list), img_chunk_size):
         imgs = []
         imgs_original = []
         curr_path_list = file_list[i : i + img_chunk_size]
