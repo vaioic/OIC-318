@@ -7,6 +7,7 @@ import skimage
 from cellpose import models
 from oic_toolkit import segment
 from pylibCZIrw import czi as pyczi
+from tqdm import tqdm
 
 
 def process_directory(input_dir, output_dir, img_chunk_size=50):
@@ -26,7 +27,7 @@ def process_directory(input_dir, output_dir, img_chunk_size=50):
         raise FileNotFoundError(f"No .tif files were found on path: {input_dir}")
 
     # Create the Cellpose model
-    model = models.CellposeModel(gpu=True)
+    model = models.CellposeModel(gpu=False)
 
     source_base = input_dir.resolve()
     output_base = output_dir.resolve()
@@ -34,14 +35,14 @@ def process_directory(input_dir, output_dir, img_chunk_size=50):
     # Process the images in chunks
     summary_data = []
 
-    for i in range(0, len(file_list), img_chunk_size):
+    for i in tqdm(range(0, len(file_list), img_chunk_size), desc="Overall"):
         imgs = []
         imgs_original = []
         curr_path_list = file_list[i : i + img_chunk_size]
 
         curr_path_list_full = []
 
-        for file in curr_path_list:
+        for file in tqdm(curr_path_list, desc=f"Reading batch {i}", leave=False):
             img = skimage.io.imread(file)
             img_adj = preprocess_image(img)
 
@@ -49,17 +50,15 @@ def process_directory(input_dir, output_dir, img_chunk_size=50):
             imgs.append(img_adj)
             imgs_original.append(img)
 
-        print("Segmenting")
-
         labels, _, _ = model.eval(imgs, flow_threshold=0.6, cellprob_threshold=-0.5)
-        print("Done")
 
         # Generate outputs and save masks
         for filepath, label, img, img_or in zip(
             curr_path_list, labels, imgs, imgs_original
         ):
             # Calculate the output file path
-            relative_path = filepath.relative_to(source_base)
+            file_source = filepath.resolve()
+            relative_path = file_source.relative_to(source_base)
             target_output_dir = output_base / relative_path.parent
 
             target_output_dir.mkdir(parents=True, exist_ok=True)

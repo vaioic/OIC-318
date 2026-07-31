@@ -10,7 +10,7 @@ This is a project with Rahma Benhassoun (Rothbart Lab).
 
 The original dataset consisted of stitched images from the ZEISS Axio Observer 7
 microscope, captured at 10x. Since this resulted in very large images (~4 GB), the
-original image tiles had to be re-exported.
+original image tiles had toe re-exported.
 
 #### Un-tiling images
 
