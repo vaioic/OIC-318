@@ -27,7 +27,7 @@ def process_directory(input_dir, output_dir, img_chunk_size=50):
         raise FileNotFoundError(f"No .tif files were found on path: {input_dir}")
 
     # Create the Cellpose model
-    model = models.CellposeModel(gpu=False)
+    model = models.CellposeModel(gpu=True)
 
     source_base = input_dir.resolve()
     output_base = output_dir.resolve()
